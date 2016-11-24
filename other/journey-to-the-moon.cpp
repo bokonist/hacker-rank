@@ -19,23 +19,23 @@ typedef long long ll;
 #define ip cin>> //input from stdin
 #define err cerr<< //output to stderr
 #define nl cout<<"\n"; //newline
-int *source;
+bool **connection;
 bool *visited;
 int countNumberOfNodes(int src , int n)
 {
-	queue<int> q;
-	q.push(src);
+	stack<int> s;
+	s.push(src);
 	int i,count=0;
-	while(!q.empty())	
+	while(!s.empty())	
 	{
 		count++;
-		i=q.front();
-		q.pop();
+		i=s.top();
+		s.pop();
 		visited[i]=true;
 		for (int j = 0; j < n; ++j)
 		{
-			if(source[j]==i && !visited[j])
-				q.push(j);
+			if(connection[i][j]==true && !visited[j])
+				s.push(j);
 		}
 	}
 	return count;
@@ -45,24 +45,41 @@ int main()
 	int n,n_i,a,b;
 	ip n;
 	ip n_i;
-	source = new int[n];
+	connection = new bool*[n];
 	visited = new bool[n];
+	vector<int> population;
 	//memset(&visited,false,sizeof(n));
 	for (int i = 0; i < n; ++i)
 	{
-		source[i]=-1;
 		visited[i]=false;
+		connection[i] = new bool[n];
+		for (int j = 0; j < n; ++j)
+			connection[i][j]=false;
 	}
 	until(n_i,0)
 	{
 		ip a>>b;
-		source[b]=a;
+		connection[a][b]=true;
+		connection[b][a]=true;
 	}
-	int numberOfWays=1;
+	int numberOfWays=0;
 	for (int i = 0; i < n; ++i)
 	{
-		if(source[i]==-1) //root of some graph in the forest
-			numberOfWays *=countNumberOfNodes(i,n);
+		if(!visited[i])
+		{
+			population.push_back(countNumberOfNodes(i,n));
+		}
+	}
+	int temp,y;
+	while(!population.empty())
+	{
+		temp=population.back();
+		population.pop_back();
+		for(auto it: population)
+		{
+			y= it;
+			numberOfWays += temp * y;
+		}
 	}
 	op numberOfWays;
 	return 0;
