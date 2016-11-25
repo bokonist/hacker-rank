@@ -26,7 +26,6 @@ int numberOfCuts=0;
 queue<int> rootlist;
 int countNumberOfChildren(int node , int src)
 {
-	//visited[src]=true;
 	vector<int> v = neighbours[node];
 	vector<int>::iterator it = find(v.begin(), v.end(), src);
 	if(it != v.end())
@@ -61,9 +60,10 @@ void cutEvenChildren(int node, int src)
 		temp = *it;
 		if(countNumberOfChildren(temp, node)%2==0)
 		{
-
+			op "cutting "<<temp<<" "<<node; nl
 			removeEdge(temp,node);
 			numberOfCuts++;
+			op "pushing "<<temp;nl
 			rootlist.push(temp);
 		}
 	}
