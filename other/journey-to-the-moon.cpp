@@ -19,67 +19,64 @@ typedef long long ll;
 #define ip cin>> //input from stdin
 #define err cerr<< //output to stderr
 #define nl cout<<"\n"; //newline
-bool **connection;
+map<int, vector<int> > neighbours; //adjacency list for the graph
 bool *visited;
-int countNumberOfNodes(int src , int n)
+int n;
+int countNumberOfNodes(int src)
 {
-	stack<int> s;
-	s.push(src);
-	int i,count=0;
-	while(!s.empty())	
+	visited[src]=true;
+	vector<int> v = neighbours[src];
+	int count = 0;
+	for (vector<int>::iterator it = v.begin(); it!=v.end(); ++it)
 	{
-		count++;
-		i=s.top();
-		s.pop();
-		visited[i]=true;
-		for (int j = 0; j < n; ++j)
-		{
-			if(connection[i][j]==true && !visited[j])
-				s.push(j);
-		}
+		if(visited[ *it ] == false)
+			count += countNumberOfNodes( *it );
+		visited[ *it ]=true;
 	}
-	return count;
+	return count+1;
 }
 int main()
 {
-	int n,n_i,a,b;
+	int n,a,b;
+	int n_i;
 	ip n;
 	ip n_i;
-	connection = new bool*[n];
 	visited = new bool[n];
-	vector<int> population;
-	//memset(&visited,false,sizeof(n));
 	for (int i = 0; i < n; ++i)
 	{
 		visited[i]=false;
-		connection[i] = new bool[n];
-		for (int j = 0; j < n; ++j)
-			connection[i][j]=false;
 	}
 	until(n_i,0)
 	{
 		ip a>>b;
-		connection[a][b]=true;
-		connection[b][a]=true;
+		neighbours[a].push_back(b);
+		neighbours[b].push_back(a);
 	}
-	int numberOfWays=0;
-	for (int i = 0; i < n; ++i)
+	vector<int> population;
+	int temp = n - neighbours.size();
+	for (int i = 0; i < temp; ++i)
 	{
-		if(!visited[i])
+		population.push_back(1);
+	}
+	ll numberOfWays=0;
+	for (map<int, vector<int> >::iterator it = neighbours.begin(); it!= neighbours.end(); ++it)
+	{
+		if(!visited[it->first])
 		{
-			population.push_back(countNumberOfNodes(i,n));
+			population.push_back(countNumberOfNodes(it->first));
 		}
 	}
-	int temp,y;
-	while(!population.empty())
+	int n_trees= population.size();
+	int suffixsum[n_trees] ,k=1;
+	suffixsum[n_trees-1]=population.back();
+	for (int k = 2; k <= n_trees; ++k)
 	{
-		temp=population.back();
-		population.pop_back();
-		for(auto it: population)
-		{
-			y= it;
-			numberOfWays += temp * y;
-		}
+		suffixsum[n_trees-k]= suffixsum[n_trees-k+1]+population[n_trees-k];
+	}
+	numberOfWays=0;
+	for (int i = 0; i+1 < n_trees; ++i)
+	{
+		numberOfWays += population[i]*suffixsum[i+1];
 	}
 	op numberOfWays;
 	return 0;
