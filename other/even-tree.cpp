@@ -21,25 +21,26 @@ typedef long long ll;
 #define nl cout<<"\n"; //newline
 map<int, vector<int> > neighbours; //adjacency list for the graph
 bool *visited;
-int numberOfChanges=0;
 int numberOfCuts=0;
 queue<int> rootlist;
-int countNumberOfChildren(int node , int src)
+
+int numberOfSubGraphNodes(int node , int src) //returns the number of subgraph elements with node as root and the src not considered.
 {
-	vector<int> v = neighbours[node];
+	vector<int> v = neighbours[node]; // get all it's neighbours from the adj list
 	vector<int>::iterator it = find(v.begin(), v.end(), src);
 	if(it != v.end())
-		v.erase( it);
+		v.erase( it); //erase the source src from the neighbour list if it is found.
 	if(v.empty())
-		return 0;
+		return 1; // no neighbours means the only element in the subgraph is the node itself
 	int count = 1;
 	for (vector<int>::iterator it = v.begin(); it!=v.end(); ++it)
 	{
-			count += countNumberOfChildren( *it , node);
+			count += numberOfSubGraphNodes( *it , node); //count all the subgraphs of its children recursively. can be cached to make program much more efficient for bigger graphs.
 	}
 	return count;
 }
-void removeEdge(int src, int des)
+
+void removeEdge(int src, int des) //removes the edge from src to destination
 {
 	vector<int>::iterator it = find(neighbours[src].begin(), neighbours[src].end(), des);
 	if(it != neighbours[src].end())
@@ -48,9 +49,9 @@ void removeEdge(int src, int des)
 	if(it != neighbours[des].end())
 				neighbours[des].erase(it);
 }
-void cutEvenChildren(int node, int src)
+void cutEvenChildren(int node, int src) //cut all neighbours with even subgraph elements
 {
-	vector<int> v = neighbours[node];
+	vector<int> v = neighbours[node]; //get the neighbours and disregard the source node from which it was called
 	vector<int>::iterator it1 = find(v.begin(), v.end(), src);
 	if(it1 != v.end())
 		v.erase( it1);
@@ -58,13 +59,11 @@ void cutEvenChildren(int node, int src)
 	for (vector<int>::iterator it = v.begin(); it!=v.end(); ++it)
 	{
 		temp = *it;
-		if(countNumberOfChildren(temp, node)%2==0)
+		if(numberOfSubGraphNodes(temp, node)%2==0) //even neighbour found
 		{
-			op "cutting "<<temp<<" "<<node; nl
-			removeEdge(temp,node);
-			numberOfCuts++;
-			op "pushing "<<temp;nl
-			rootlist.push(temp);
+		//	op "cutting "<<temp<<"---"<<node; nl
+			removeEdge(temp,node); //cut that edge
+			numberOfCuts++; //increment cut count
 		}
 	}
 }
@@ -86,7 +85,9 @@ int main()
 		neighbours[b].push_back(a);
 	}
 	int x;
-	rootlist.push(1);
+	for (int i = 0; i < n; ++i)
+		rootlist.push(i); //push every node to explore possible cuts
+
 	while(!rootlist.empty())
 	{
 		x= rootlist.front();
