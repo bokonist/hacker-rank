@@ -19,7 +19,7 @@ typedef long long ll;
 #define ip cin>> //input from stdin
 #define err cerr<< //output to stderr
 #define nl cout<<"\n"; //newline
-int closestPowerOfTwo(int n)
+ll closestPowerOfTwo(ll n)
 {
 	if(!n&(n-1))
 		return n;
@@ -28,7 +28,7 @@ int closestPowerOfTwo(int n)
 	n|=n>>4;
 	n|=n>>8;
 	n|=n>>16;
-	return (n+1)>>2;
+	return (n+1)>>1;
 }
 int noOfSetBits(int n)
 {
@@ -40,7 +40,7 @@ int noOfSetBits(int n)
 	}
 	return count;
 }
-int whichPowerOfTwo(int n)
+ll whichPowerOfTwo(ll n)
 {
 	if(n==0)
 		return 0;
@@ -49,13 +49,13 @@ int whichPowerOfTwo(int n)
 		i++;
 	return i;
 }
-int onesTill(int n)
+ll onesTill(ll n)
 {
-	int y= closestPowerOfTwo(n);
-	y=whichPowerOfTwo(y)+2; //get the number of columns to count ones
+	ll y= closestPowerOfTwo(n);
+	y=whichPowerOfTwo(y)+1; //get the number of columns to count ones
 	ll count=0;
-	int a=1,b=2;
-	for (int i = 0; i < y; ++i)
+	ll a=1,b=2;
+	for (ll i = 0; i < y; ++i)
 	{
 		count+= a*(n/b);
 		if(n%b >= b/2)
@@ -65,21 +65,32 @@ int onesTill(int n)
 	}
 	return count;
 }
-int onesNeg(int b)
+bool isPowerOfTwo(int n)
+{
+	if(!n&(n-1))
+		return true;
+	return false;
+}
+ll onesNeg(ll b)
 {
 	if(b==0)
 		return 0;
-	int count=0;
-	count+= (32*(-b) - onesTill(-b));
-	if(b==-1)
-		count++;
-	else
+	ll count=0;
+	count+= (32*(-b) - onesTill(-b-1));
+	if(!isPowerOfTwo(-b+1))
+		count;
+	else if(isPowerOfTwo(-b+1))
 		count+=((-b)-1);
+	/*ll count=0;
+	for (ll i = b; i < 0; ++i)
+	{
+		count+=noOfSetBits(i);
+	}*/
 	return count;
 }
-int onesInRange(int a,int b)
+ll onesInRange(ll a,ll b)
 {
-	int count=0;
+	//int count=0;
 	if(a>=0)
 	{
 		//op "all pos";nl
@@ -106,7 +117,7 @@ int main()
 	ip t;
 	while(t--)
 	{
-		int a,b;
+		ll a,b;
 		ll count=0;
 		ip a>>b;
 		op onesInRange(a,b); nl
@@ -115,9 +126,29 @@ int main()
 	op bitset<32>(-1);nl
 	op bitset<32>(-2);nl
 	op bitset<32>(-3);nl
-	op onesTill(9); nl
-	op onesNeg(-117);nl
-	op INT_MIN;nl
-	//op onesTill(15)<<' '<<onesTill(16)<<' '<<onesTill(17)<<' '<<onesTill(18)<<' '<<onesTill(19)<<' '<<onesTill(20)<<' ';*/
+	op bitset<32>(-4);nl
+	op bitset<32>(-5);nl
+	op bitset<32>(-6);nl
+	op bitset<32>(-7);nl
+	op bitset<32>(-8);nl
+	op bitset<32>(-9);nl
+	op bitset<32>(-10);nl
+	op bitset<32>(-11);nl
+	op onesNeg(-1);nl
+	op onesNeg(-2);nl
+	op onesNeg(-3);nl
+	op onesNeg(-4);nl
+	op onesNeg(-5);nl
+	op onesNeg(-6);nl
+	op onesNeg(-7);nl
+	op onesNeg(-8);nl
+	op onesNeg(-9);nl
+	op onesNeg(-10);nl
+	op onesTill(15); nl
+	op onesNeg(-3);nl
+	op onesInRange(-3,15);nl
+	//op INT_MIN;nl
+	op onesTill(15)<<' '<<onesTill(16)<<' '<<onesTill(17)<<' '<<onesTill(18)<<' '<<onesTill(19)<<' '<<onesTill(20)<<' ';
+	//op closestPowerOfTwo(18);*/
 	return 0;
 }
