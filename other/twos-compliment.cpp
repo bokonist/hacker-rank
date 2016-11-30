@@ -77,15 +77,8 @@ ll onesNeg(ll b)
 		return 0;
 	ll count=0;
 	count+= (32*(-b) - onesTill(-b-1));
-	if(!isPowerOfTwo(-b+1))
-		count;
-	else if(isPowerOfTwo(-b+1))
+	if(isPowerOfTwo(-b+1))
 		count+=((-b)-1);
-	/*ll count=0;
-	for (ll i = b; i < 0; ++i)
-	{
-		count+=noOfSetBits(i);
-	}*/
 	return count;
 }
 ll onesInRange(ll a,ll b)
@@ -93,20 +86,17 @@ ll onesInRange(ll a,ll b)
 	//int count=0;
 	if(a>=0)
 	{
-		//op "all pos";nl
 		return onesTill(b) - onesTill(a) + noOfSetBits(a);
 	}
 	else
 	{
 		if(b>=0) //pos and negative
 		{
-			//op "pos and neg";nl
 			return onesNeg(a) + onesTill(b);
 
 		} //both are negative
 		else
 		{
-			//op"all neg";nl
 			return onesNeg(a) - onesNeg(b) + noOfSetBits(b);
 		}
 	}
@@ -122,33 +112,5 @@ int main()
 		ip a>>b;
 		op onesInRange(a,b); nl
 	}
-	/*
-	op bitset<32>(-1);nl
-	op bitset<32>(-2);nl
-	op bitset<32>(-3);nl
-	op bitset<32>(-4);nl
-	op bitset<32>(-5);nl
-	op bitset<32>(-6);nl
-	op bitset<32>(-7);nl
-	op bitset<32>(-8);nl
-	op bitset<32>(-9);nl
-	op bitset<32>(-10);nl
-	op bitset<32>(-11);nl
-	op onesNeg(-1);nl
-	op onesNeg(-2);nl
-	op onesNeg(-3);nl
-	op onesNeg(-4);nl
-	op onesNeg(-5);nl
-	op onesNeg(-6);nl
-	op onesNeg(-7);nl
-	op onesNeg(-8);nl
-	op onesNeg(-9);nl
-	op onesNeg(-10);nl
-	op onesTill(15); nl
-	op onesNeg(-3);nl
-	op onesInRange(-3,15);nl
-	//op INT_MIN;nl
-	op onesTill(15)<<' '<<onesTill(16)<<' '<<onesTill(17)<<' '<<onesTill(18)<<' '<<onesTill(19)<<' '<<onesTill(20)<<' ';
-	//op closestPowerOfTwo(18);*/
 	return 0;
 }
